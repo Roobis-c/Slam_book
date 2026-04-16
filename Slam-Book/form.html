@@ -1,0 +1,679 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover"/>
+  <title>Add Memories ✨ – Roobi's Slam Book</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;14..32,400;14..32,500;14..32,600;14..32,700&family=Playfair+Display:ital,wght@0,400;0,500;0,600;1,400&display=swap" rel="stylesheet">
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;0,700;1,300;1,400&family=DM+Sans:wght@300;400;500;600&family=Great+Vibes&display=swap');
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    :root {
+      --bg-dark: #0c0a12;
+      --bg-card: rgba(22, 20, 32, 0.85);
+      --bg-elevated: #1e1c2c;
+      --border: rgba(255, 255, 255, 0.08);
+      --border-rose: rgba(232, 98, 122, 0.35);
+      --rose: #e8627a;
+      --rose-dim: #c03f5a;
+      --rose-glow: rgba(232, 98, 122, 0.35);
+      --mint: #8dd3c7;
+      --text-primary: #f5edf5;
+      --text-secondary: #cbc3e0;
+      --text-muted: #8f89a8;
+      --font-body: 'Inter', system-ui, -apple-system, sans-serif;
+      --font-display: 'Playfair Display', serif;
+      --radius-md: 20px;
+      --radius-lg: 32px;
+      --transition: all 0.25s ease;
+      --font-script:  'Great Vibes', cursive;
+    }
+
+    body {
+      background: var(--bg-dark);
+      color: var(--text-primary);
+      font-family: var(--font-body);
+      line-height: 1.5;
+      overflow-x: hidden;
+    }
+
+    .ambient {
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      z-index: 0;
+      overflow: hidden;
+    }
+    .ab {
+      position: absolute;
+      border-radius: 50%;
+      filter: blur(80px);
+      opacity: 0.3;
+    }
+    .ab-1 { width: 50vw; height: 50vw; background: #e8627a; top: -20vh; left: -20vw; }
+    .ab-2 { width: 45vw; height: 45vw; background: #9b7fc4; bottom: -15vh; right: -10vw; }
+    .ab-3 { width: 35vw; height: 35vw; background: #4ecdc4; top: 60%; left: 30%; opacity: 0.15; }
+
+    /* navbar */
+    .navbar {
+      position: relative;
+      z-index: 20;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 18px 28px;
+      backdrop-filter: blur(12px);
+      background: rgba(12, 10, 18, 0.6);
+      border-bottom: 1px solid var(--border);
+    }
+.nav-brand {
+      font-family: var(--font-script);
+      font-size: 2rem;
+      color: var(--rose);
+      text-decoration: none;
+      letter-spacing: 0.02em;
+      text-shadow: 0 0 28px rgba(232,98,122,0.5);
+    }
+    .btn-ghost {
+      background: transparent;
+      border: 1px solid var(--border-rose);
+      color: var(--rose);
+      border-radius: 60px;
+      padding: 8px 18px;
+      font-weight: 500;
+      transition: var(--transition);
+      text-decoration: none;
+      font-size: 0.85rem;
+    }
+    .btn-ghost:hover { background: rgba(232,98,122,0.12); border-color: var(--rose); }
+
+    /* main layout */
+    .form-page { min-height: 100vh; padding-bottom: 100px; position: relative; z-index: 2; }
+    .form-header { text-align: center; padding: 48px 24px 32px; }
+    .form-header h1 { font-family: var(--font-display); font-size: clamp(2.2rem, 6vw, 3.6rem); font-weight: 600; color: var(--text-primary); }
+    .form-header h1 em { font-style: italic; color: var(--rose); text-shadow: 0 0 12px var(--rose-glow); }
+    .form-header p { color: var(--text-secondary); font-size: 1rem; margin-top: 6px; }
+
+    /* cards */
+    .form-wrap { max-width: 780px; margin: 0 auto; padding: 0 20px; }
+    .card {
+      background: var(--bg-card);
+      backdrop-filter: blur(12px);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-lg);
+      margin-bottom: 28px;
+      transition: transform 0.2s ease, box-shadow 0.2s;
+      box-shadow: 0 12px 28px rgba(0,0,0,0.3);
+    }
+    .card:hover { box-shadow: 0 20px 32px rgba(0,0,0,0.4), 0 0 0 1px rgba(232,98,122,0.2); }
+    .card-head {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      padding: 20px 28px 8px 28px;
+      border-bottom: 1px solid rgba(232,98,122,0.2);
+    }
+    .card-head-icon {
+      background: rgba(232,98,122,0.12);
+      border-radius: 60px;
+      width: 48px;
+      height: 48px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.6rem;
+      border: 1px solid var(--border-rose);
+    }
+    .card-head-text h2 { font-size: 1.45rem; font-family: var(--font-display); font-weight: 500; }
+    .card-head-text p { font-size: 0.8rem; color: var(--text-muted); margin-top: 4px; }
+    .card-body { padding: 24px 28px; }
+
+    /* form elements */
+    .form-group { margin-bottom: 22px; }
+    .form-label {
+      display: block;
+      font-weight: 500;
+      margin-bottom: 8px;
+      color: var(--text-secondary);
+      letter-spacing: -0.2px;
+    }
+    .form-input, .form-textarea {
+      width: 100%;
+      background: var(--bg-elevated);
+      border: 1px solid var(--border);
+      border-radius: 24px;
+      padding: 14px 20px;
+      color: var(--text-primary);
+      font-family: var(--font-body);
+      transition: var(--transition);
+      font-size: 0.95rem;
+    }
+    .form-input:focus, .form-textarea:focus {
+      outline: none;
+      border-color: var(--rose);
+      box-shadow: 0 0 0 3px rgba(232,98,122,0.2);
+    }
+    .error-msg { font-size: 0.7rem; color: #ffa69e; margin-top: 6px; display: none; align-items: center; gap: 4px; }
+    .error-msg.show { display: flex; }
+
+    /* image picker with captions */
+    .image-picker {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
+      gap: 16px;
+      margin-top: 8px;
+    }
+   
+    .img-option img {
+      width: 70px;
+      height: 70px;
+      background: #2a2538;
+      padding: 6px;
+      margin: 15px;
+      margin-bottom: 0px;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+      transition: transform 0.2s;
+    }
+    .img-caption {
+      text-align: center;
+      font-size: 0.7rem;
+      font-weight: 500;
+      color: var(--text-muted);
+      letter-spacing: 0.3px;
+    }
+    .img-option.selected {
+      border-color: var(--rose);
+      background: rgba(232,98,122,0.15);
+      box-shadow: 0 0 0 2px rgba(232,98,122,0.4);
+    }
+    .img-option.selected img { transform: scale(1.02); }
+    .img-option.selected .img-caption { color: var(--rose); font-weight: 600; }
+
+    /* rating star style (review style) */
+    .star-rating-container {
+      background: var(--bg-elevated);
+      border-radius: 48px;
+      padding: 8px 16px;
+      display: inline-flex;
+      align-items: center;
+      gap: 16px;
+      flex-wrap: wrap;
+      width: 100%;
+    }
+    .stars-wrapper {
+      display: flex;
+      gap: 8px;
+      align-items: center;
+      flex-wrap: wrap;
+    }
+    .star-icon {
+      font-size: 2rem;
+      cursor: pointer;
+      transition: transform 0.1s ease, color 0.2s;
+      color: #4a4458;
+      display: inline-block;
+    }
+    .star-icon.active {
+      color: #FFD966;
+      text-shadow: 0 0 6px #ffb347;
+    }
+    .star-icon:hover { transform: scale(1.1); }
+    .rating-number-badge {
+      background: var(--rose-dim);
+      border-radius: 40px;
+      padding: 6px 18px;
+      font-weight: 700;
+      font-size: 1.2rem;
+      color: white;
+    }
+    .rating-review-text {
+      font-size: 0.75rem;
+      color: var(--mint);
+      margin-left: 8px;
+      font-style: italic;
+    }
+    .rating-label {
+      margin-top: 10px;
+      font-size: 0.8rem;
+    }
+
+    /* toggle pair */
+    .toggle-pair {
+      display: flex;
+      gap: 18px;
+      margin-top: 8px;
+    }
+    .toggle-label {
+      display: flex;
+      cursor: pointer;
+    }
+    .toggle-face {
+      background: var(--bg-elevated);
+      border: 1px solid var(--border);
+      border-radius: 60px;
+      padding: 8px 28px;
+      font-weight: 500;
+      transition: all 0.2s;
+    }
+    .toggle-label input:checked + .toggle-face {
+      background: linear-gradient(135deg, var(--rose), var(--rose-dim));
+      border-color: var(--rose);
+      color: white;
+      box-shadow: 0 0 12px var(--rose-glow);
+    }
+    .toggle-label input { display: none; }
+
+    .btn-primary {
+      background: linear-gradient(135deg, #e8627a, #b83c5c);
+      border: none;
+      padding: 14px 38px;
+      border-radius: 60px;
+      font-weight: 700;
+      font-size: 1.1rem;
+      color: white;
+      cursor: pointer;
+      transition: transform 0.2s, box-shadow 0.2s;
+      box-shadow: 0 8px 20px rgba(184,60,92,0.3);
+    }
+    .btn-primary:hover { transform: scale(1.02); box-shadow: 0 12px 28px rgba(232,98,122,0.5); }
+    .btn-primary:active { transform: scale(0.98); }
+
+    /* success overlay */
+    .success-overlay {
+      position: fixed; inset: 0; z-index: 800;
+      display: flex; align-items: center; justify-content: center;
+      background: rgba(12,10,18,0.96); backdrop-filter: blur(20px);
+      opacity: 0; pointer-events: none; transition: opacity 0.4s;
+    }
+    .success-overlay.show { opacity: 1; pointer-events: all; }
+    .success-box {
+      background: var(--bg-card);
+      border: 1px solid var(--border-rose);
+      border-radius: var(--radius-lg);
+      padding: 48px 40px;
+      max-width: 460px;
+      text-align: center;
+      transform: scale(0.9);
+      transition: transform 0.4s cubic-bezier(0.2,0.9,0.4,1.1);
+    }
+    .success-overlay.show .success-box { transform: scale(1); }
+    .success-title { font-family: var(--font-display); font-size: 2rem; color: var(--rose); margin: 12px 0; }
+
+    /* toast */
+    .toast {
+      position: fixed; bottom: 28px; left: 50%; transform: translateX(-50%) translateY(20px);
+      background: #1e1a2a; border-left: 4px solid var(--rose); padding: 12px 24px;
+      border-radius: 60px; color: white; z-index: 900; opacity: 0; transition: opacity 0.2s, transform 0.2s;
+      pointer-events: none; font-weight: 500; backdrop-filter: blur(12px);
+    }
+    .toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
+
+    /* SPINNER FIX - starts hidden */
+    .spinner {
+      position: fixed;
+      inset: 0;
+      background: rgba(0,0,0,0.85);
+      backdrop-filter: blur(12px);
+      z-index: 999;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      visibility: hidden;
+      opacity: 0;
+      transition: visibility 0.2s, opacity 0.2s;
+    }
+    .spinner:not(.hidden) {
+      visibility: visible;
+      opacity: 1;
+    }
+    .spinner.hidden {
+      visibility: hidden;
+      opacity: 0;
+    }
+    .spin-ring {
+      width: 48px;
+      height: 48px;
+      border: 4px solid rgba(232,98,122,0.2);
+      border-top: 4px solid var(--rose);
+      border-radius: 50%;
+      animation: spin 0.7s linear infinite;
+    }
+    @keyframes spin { to { transform: rotate(360deg); } }
+
+    @media (max-width: 620px) {
+      .card-body { padding: 18px; }
+      .image-picker { grid-template-columns: repeat(3, 1fr); gap: 10px; }
+    }
+    .fade-up { animation: fadeUp 0.45s ease backwards; }
+    @keyframes fadeUp { from { opacity: 0; transform: translateY(18px); } to { opacity: 1; transform: translateY(0); } }
+    .q-row { margin-bottom: 24px; }
+    .q-row:last-child { margin-bottom: 0; }
+  </style>
+</head>
+<body data-page="form">
+  <div class="ambient"><div class="ab ab-1"></div><div class="ab ab-2"></div><div class="ab ab-3"></div></div>
+  
+  <!-- Spinner starts HIDDEN (has 'hidden' class) -->
+  <div id="spinner" class="spinner hidden">
+    <div class="spin-ring"></div>
+  </div>
+
+  <nav class="navbar">
+    <a href="index.html" class="nav-brand">Roobis 💌</a>
+    <div class="nav-right">
+      <a href="index.html" class="btn-ghost">← Home</a>
+    </div>
+  </nav>
+
+  <div class="form-page page">
+    <div class="form-header">
+      <h1>Leave Your <em>Mark</em></h1>
+      <p>a whisper, a laugh, a memory — all become timeless ✨</p>
+    </div>
+
+    <form class="form-wrap" id="slam-form" novalidate>
+      <!-- 1: Identity -->
+      <div class="card form-card fade-up">
+        <div class="card-head">
+          <div class="card-head-icon">🌸</div>
+          <div class="card-head-text"><h2>Who are you?</h2><p>so Roobis knows who made his day</p></div>
+        </div>
+        <div class="card-body">
+          <div class="form-group">
+            <label class="form-label">Your Name</label>
+            <input type="text" class="form-input" id="name" placeholder="Your beautiful name here…" maxlength="60" autocomplete="off"/>
+            <div class="error-msg" id="name-error">⚠ Name cannot contain numbers</div>
+          </div>
+          <div class="form-group">
+            <label class="form-label">Roll Number</label>
+            <input type="text" class="form-input" id="roll" placeholder="e.g. 23CS042" maxlength="30"/>
+          </div>
+        </div>
+      </div>
+
+      <!-- 2: Avatar with CAPTIONS -->
+      <div class="card form-card fade-up">
+        <div class="card-head">
+          <div class="card-head-icon">🎭</div>
+          <div class="card-head-text"><h2>Pick my vibe</h2><p>choose the avatar that feels like me 🌙</p></div>
+        </div>
+        <div class="card-body">
+          <div class="image-picker" id="image-grid"></div><br>
+          <p style="font-size:0.7rem;color:var(--text-muted);margin-top:14px;">✨ click on any — each has a little soul caption</p>
+        </div>
+      </div>
+
+      <!-- 3: Questions -->
+      <div class="card form-card fade-up">
+        <div class="card-head">
+          <div class="card-head-icon">💬</div>
+          <div class="card-head-text"><h2>The Real Questions</h2><p>raw, honest, yours</p></div>
+        </div>
+        <div class="card-body">
+          <div class="q-row"><label class="form-label">What was your first impression of me?</label><input type="text" class="form-input" id="impression" placeholder="Be honest 👀" maxlength="220"/></div>
+          <div class="q-row"><label class="form-label">What do you think I’ll be doing in the future?</label><input type="text" class="form-input" id="personality" placeholder="Go Ahead" maxlength="220"/></div>
+          <div class="q-row"><label class="form-label">One thing I should improve?</label><input type="text" class="form-input" id="improve" placeholder="Be real, I can take it 💪" maxlength="220"/></div>
+          <div class="q-row"><label class="form-label">Describe me in one word</label><input type="text" class="form-input" id="oneWord" placeholder="Just one ✨" maxlength="40"/></div>
+          <div class="q-row"><label class="form-label">If I had a warning label, what would it say?</label><input type="text" class="form-input" id="oneWord" placeholder="Tell 😤" maxlength="40"/></div>
+          
+          <!-- STAR RATING (product review style) -->
+          <div class="q-row">
+            <label class="form-label">Rate me out of 10 ★ as Friend</label>
+            <div class="star-rating-container">
+              <div class="stars-wrapper" id="star-rating-widget"></div>
+              <div class="rating-number-badge" id="rating-value-badge">7</div>
+            </div>
+            <div class="rating-label" id="rating-review-text">🌟 "Pretty great vibes"</div>
+            <input type="hidden" id="rating-hidden" value="7">
+          </div>
+        </div>
+      </div>
+
+      <!-- 4: Secret Message -->
+      <div class="card form-card fade-up">
+        <div class="card-head"><div class="card-head-icon">💌</div><div class="card-head-text"><h2>Message For Me</h2><p>pour your heart out</p></div></div>
+        <div class="card-body">
+          <textarea class="form-textarea" id="message" rows="5" placeholder="This is your safe space. 🌊&#10;Write whatever you've been holding… a memory, a confession, a simple hello." style="min-height:120px;"></textarea>
+        </div>
+      </div>
+
+      <!-- 5: Memory Question -->
+      <div class="card form-card memory-card fade-up">
+        <div class="card-head"><div class="card-head-icon">💭</div><div class="card-head-text"><h2>Memory Question</h2><p>one last secret</p></div></div>
+        <div class="card-body">
+          <label class="form-label">Does Roobis want to share memories of you? 💭</label>
+          <div class="toggle-pair">
+            <label class="toggle-label"><input type="radio" name="shareMemory" value="yes"/><div class="toggle-face">YES 💜 (share my story)</div></label>
+            <label class="toggle-label"><input type="radio" name="shareMemory" value="no" checked/><div class="toggle-face">NO 🙅 (Don't need)</div></label>
+          </div>
+        </div>
+      </div>
+
+      <div style="text-align:center;padding:10px 0 32px;">
+        <button type="submit" class="btn-primary" id="submit-btn">Submit Memory 💌</button>
+        <p style="font-size:0.75rem;color:var(--text-muted);margin-top:16px;">your words become a forever petal in this garden 🌸</p>
+      </div>
+    </form>
+  </div>
+
+  <!-- Success overlay -->
+  <div class="success-overlay" id="success-overlay">
+    <div class="success-box">
+      <div class="success-icon" style="font-size:3rem;">💖</div>
+      <div class="success-title">Thank you!</div>
+      <div class="success-text">You just made my day a thousand times better ✨<br/>Your words are now a forever part of my heart 💭</div>
+      <button class="btn-primary" id="success-home" style="margin-top:12px;">Back to Home 🏠</button>
+    </div>
+  </div>
+
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+    import { getFirestore, collection, addDoc, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+
+   const firebaseConfig = {
+  apiKey: "AIzaSyD5WARoyQtccLXoNrdtqe0lcK4dHaBKXaM",
+  authDomain: "slam-book-cd4b5.firebaseapp.com",
+  projectId: "slam-book-cd4b5",
+  storageBucket: "slam-book-cd4b5.firebasestorage.app",
+  messagingSenderId: "257179480470",
+  appId: "1:257179480470:web:944746f444f19c4d1d2db7"
+};
+    const app = initializeApp(firebaseConfig);
+    const db = getFirestore(app);
+
+    // Avatar set with captions!
+    const AVATARS = [
+      { src: "assets/neutral.png", caption: "Neutral" },
+      { src: "assets/caring.png", caption: "Caring" },
+      { src: "assets/innocent.png", caption: "Innocent" },
+      { src: "assets/poison.png", caption: "Poison" },
+      { src: "assets/tensed.png", caption: "Tensed" },
+      { src: "assets/cool.png", caption: "cool" }
+    ];
+
+    // Helper functions
+    function showSpinner() { 
+      const s = document.getElementById("spinner"); 
+      if(s) s.classList.remove("hidden"); 
+    }
+    function hideSpinner() { 
+      const s = document.getElementById("spinner"); 
+      if(s) s.classList.add("hidden"); 
+    }
+    function showToast(msg, type = "success") {
+      const toast = document.createElement("div"); 
+      toast.className = "toast"; 
+      toast.textContent = msg;
+      document.body.appendChild(toast);
+      setTimeout(() => toast.classList.add("show"), 10);
+      setTimeout(() => { 
+        toast.classList.remove("show"); 
+        setTimeout(() => toast.remove(), 400); 
+      }, 2800);
+    }
+
+    // init star rating widget (10 stars)
+    function initStarRating() {
+      const container = document.getElementById("star-rating-widget");
+      const hiddenInput = document.getElementById("rating-hidden");
+      const badge = document.getElementById("rating-value-badge");
+      const reviewSpan = document.getElementById("rating-review-text");
+      if (!container) return;
+      let currentRating = 7;
+      const reviewMap = {
+        1:"💀 brutal... but okay",2:"😬 yikes",3:"😕 not great",4:"🧐 hmm",5:"😐 mid",
+        6:"🙂 decent",7:"🌟 good vibes",8:"😍 really nice!",9:"✨ amazing!",10:"🔥 ABSOLUTE LEGEND"
+      };
+      function updateStars(rating) {
+        currentRating = rating;
+        hiddenInput.value = rating;
+        badge.innerText = rating;
+        reviewSpan.innerHTML = reviewMap[rating] || "⭐ rated";
+        const starElements = container.querySelectorAll(".star-icon");
+        starElements.forEach((star, idx) => {
+          if (idx < rating) star.classList.add("active");
+          else star.classList.remove("active");
+        });
+      }
+      for (let i = 1; i <= 10; i++) {
+        const starSpan = document.createElement("span");
+        starSpan.className = "star-icon";
+        starSpan.innerHTML = "★";
+        starSpan.setAttribute("data-value", i);
+        starSpan.addEventListener("click", () => updateStars(i));
+        container.appendChild(starSpan);
+      }
+      updateStars(7);
+    }
+
+    // image grid with captions
+    function initImageGrid() {
+      const grid = document.getElementById("image-grid");
+      if (!grid) return () => null;
+      
+      AVATARS.forEach((item, idx) => {
+        const wrap = document.createElement("div");
+        wrap.className = "img-option";
+        const img = document.createElement("img");
+        img.src = item.src; 
+        img.alt = `avatar ${idx+1}`;
+        const captionSpan = document.createElement("div");
+        captionSpan.className = "img-caption";
+        captionSpan.innerText = item.caption;
+        wrap.appendChild(img);
+        wrap.appendChild(captionSpan);
+        wrap.addEventListener("click", () => {
+          document.querySelectorAll(".img-option").forEach(el => el.classList.remove("selected"));
+          wrap.classList.add("selected");
+        });
+        grid.appendChild(wrap);
+      });
+      
+      // Return function to get selected image
+      return () => {
+        const selected = document.querySelector(".img-option.selected");
+        if (selected) {
+          const img = selected.querySelector("img");
+          return img ? img.src : null;
+        }
+        return null;
+      };
+    }
+
+    // Main initialization
+    document.addEventListener("DOMContentLoaded", () => {
+      const getSelectedAvatar = initImageGrid();
+      initStarRating();
+
+      // name validation
+      const nameInput = document.getElementById("name");
+      const nameErr = document.getElementById("name-error");
+      if (nameInput && nameErr) {
+        nameInput.addEventListener("input", () => {
+          if (/\d/.test(nameInput.value)) {
+            nameErr.classList.add("show");
+            nameInput.style.borderColor = "#ffa69e";
+          } else {
+            nameErr.classList.remove("show");
+            nameInput.style.borderColor = "";
+          }
+        });
+      }
+
+      const form = document.getElementById("slam-form");
+      const submitBtn = document.getElementById("submit-btn");
+      
+      if (form) {
+        form.addEventListener("submit", async (e) => {
+          e.preventDefault();
+          
+          const nameVal = nameInput ? nameInput.value.trim() : "";
+          if (/\d/.test(nameVal)) { 
+            showToast("Name cannot contain numbers!", "error"); 
+            return; 
+          }
+          
+          const selectedImg = getSelectedAvatar ? getSelectedAvatar() : null;
+          if (!selectedImg) { 
+            showToast("Please pick an avatar! 🖼️", "error"); 
+            return; 
+          }
+
+          const shareMemoryRadio = document.querySelector('input[name="shareMemory"]:checked');
+          const shareMemory = shareMemoryRadio?.value === "yes";
+
+          const ratingVal = parseInt(document.getElementById("rating-hidden")?.value || "7");
+
+          const entry = {
+            name: nameVal || "Anonymous",
+            roll: document.getElementById("roll")?.value.trim() || "",
+            selectedImage: selectedImg,
+            answers: {
+              impression: document.getElementById("impression")?.value.trim() || "",
+              personality: document.getElementById("personality")?.value.trim() || "",
+              improve: document.getElementById("improve")?.value.trim() || "",
+              oneWord: document.getElementById("oneWord")?.value.trim() || "",
+              rating: ratingVal
+            },
+            message: document.getElementById("message")?.value.trim() || "",
+            shareMemory,
+            createdAt: serverTimestamp()
+          };
+          
+          if (submitBtn) { 
+            submitBtn.disabled = true; 
+            submitBtn.textContent = "Saving..."; 
+          }
+          showSpinner();
+          
+          try {
+            await addDoc(collection(db, "entries"), entry);
+            hideSpinner();
+            showToast("Memory saved forever! 💌");
+            const overlay = document.getElementById("success-overlay");
+            if (overlay) overlay.classList.add("show");
+          } catch (err) {
+            hideSpinner();
+            showToast("Something went wrong 😢", "error");
+            console.error(err);
+            if (submitBtn) { 
+              submitBtn.disabled = false; 
+              submitBtn.textContent = "Submit Memory 💌"; 
+            }
+          }
+        });
+      }
+
+      document.getElementById("success-home")?.addEventListener("click", () => {
+        window.location.href = "index.html";
+      });
+    });
+  </script>
+</body>
+</html>

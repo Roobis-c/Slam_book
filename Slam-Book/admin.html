@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Dashboard 📖 – Roobi's Slam Book</title>
+  <link rel="stylesheet" href="style.css"/>
+  <style>
+    .dash-page { min-height:100vh; padding-bottom:80px; }
+
+    /* Header */
+    .dash-header { padding:48px 0 32px; position:relative; z-index:1; }
+    .dash-title {
+      font-family:var(--font-display);
+      font-size:clamp(1.8rem,4vw,2.9rem); font-weight:600;
+      color:var(--text-primary); margin-bottom:6px;
+    }
+    .dash-title em { font-style:italic; color:var(--rose); }
+    .dash-sub { color:var(--text-secondary); font-size:0.95rem; }
+
+    /* Stats */
+    .stats-row { display:flex; gap:14px; flex-wrap:wrap; margin:24px 0; }
+    .stat-chip {
+      background:var(--bg-card); border:1px solid var(--border);
+      border-radius:50px; padding:9px 20px;
+      font-size:0.86rem; color:var(--text-secondary);
+      font-weight:500; box-shadow:var(--shadow-card);
+    }
+    .stat-chip span { color:var(--rose); font-weight:700; }
+    .stat-chip.gold { border-color:rgba(212,168,83,0.25); }
+    .stat-chip.gold span { color:var(--gold); }
+
+    /* Controls */
+    .controls { display:flex; gap:12px; flex-wrap:wrap; align-items:center; margin-bottom:32px; }
+    .controls .form-input { max-width:280px; flex:1; }
+    .filter-btn {
+      padding:9px 18px; border-radius:50px;
+      border:1px solid var(--border); background:var(--bg-card);
+      font-family:var(--font-body); font-size:0.82rem; font-weight:500;
+      cursor:pointer; color:var(--text-secondary); transition:var(--transition);
+    }
+    .filter-btn:hover { border-color:var(--border-rose); color:var(--rose); }
+    .filter-btn.active {
+      background:var(--rose-subtle); border-color:var(--border-rose);
+      color:var(--rose); box-shadow:0 0 12px var(--rose-glow);
+    }
+
+    /* Grid */
+    .entries-grid {
+      display:grid; grid-template-columns:repeat(auto-fill, minmax(285px,1fr));
+      gap:18px; position:relative; z-index:1;
+    }
+
+    /* Entry card */
+    .entry-card {
+      cursor:pointer; overflow:hidden; position:relative;
+    }
+    .entry-card.memory-card {
+      border-color:rgba(155,127,196,0.35);
+    }
+    .entry-card.memory-card:hover {
+      border-color:var(--lilac);
+      box-shadow:0 20px 60px rgba(0,0,0,0.7), 0 0 0 1px rgba(155,127,196,0.4);
+    }
+    .memory-flag {
+      position:absolute; top:14px; right:14px;
+      background:rgba(155,127,196,0.18); border:1px solid rgba(155,127,196,0.4);
+      color:var(--lilac); font-size:0.72rem; font-weight:600;
+      padding:4px 10px; border-radius:20px; letter-spacing:0.04em;
+    }
+    .ec-img {
+      height:80px; overflow:hidden;
+      background:linear-gradient(135deg,var(--bg-elevated),var(--bg-deep));
+      display:flex; align-items:center; justify-content:center;
+    }
+    .ec-img img { height:72px; width:72px; object-fit:cover; border-radius:50%; border:2px solid var(--border); }
+    .ec-body { padding:18px 20px; }
+    .ec-name {
+      font-family:var(--font-display); font-size:1.15rem;
+      font-weight:600; color:var(--text-primary); margin-bottom:3px;
+    }
+    .ec-roll { font-size:0.78rem; color:var(--text-muted); margin-bottom:10px; }
+    .ec-preview {
+      font-size:0.86rem; color:var(--text-secondary);
+      line-height:1.55; margin-bottom:12px;
+      display:-webkit-box; -webkit-line-clamp:2; -webkit-box-orient:vertical; overflow:hidden;
+      font-style:italic;
+    }
+    .ec-footer { display:flex; align-items:center; gap:8px; flex-wrap:wrap; }
+    .ec-rating { font-size:0.8rem; color:var(--gold); font-weight:600; }
+    .ec-word {
+      font-size:0.77rem; background:var(--rose-subtle);
+      color:var(--rose); border-radius:20px; padding:2px 9px;
+      border:1px solid var(--border-rose);
+    }
+    .ec-date { font-size:0.72rem; color:var(--text-ghost); margin-left:auto; }
+
+    /* Empty */
+    .empty-state {
+      grid-column:1/-1; text-align:center; padding:70px 24px;
+    }
+    .empty-state p { font-family:var(--font-display); font-size:1.3rem; color:var(--text-secondary); margin-bottom:6px; }
+    .empty-sub { font-size:0.88rem; color:var(--text-muted) !important; font-family:var(--font-body) !important; font-size:0.88rem !important; }
+  </style>
+</head>
+<body data-page="admin">
+  <div class="ambient"><div class="ab ab-1"></div><div class="ab ab-2"></div><div class="ab ab-3"></div></div>
+  <div id="spinner" class="hidden"><div class="spin-ring"></div></div>
+
+  <nav class="navbar">
+    <a href="index.html" class="nav-brand">Roobi's</a>
+    <div class="nav-right">
+      <button class="btn btn-ghost btn-sm" id="btn-logout">🚪 Logout</button>
+    </div>
+  </nav>
+
+  <div class="dash-page page">
+    <div class="container">
+      <div class="dash-header">
+        <div class="eyebrow">Admin Dashboard</div>
+        <h1 class="dash-title">All the hearts<br/>that wrote for <em>you</em></h1>
+        <p class="dash-sub">Every entry is a piece of someone's truth 💖</p>
+        <div class="stats-row">
+          <div class="stat-chip">Total entries: <span id="entry-count">—</span></div>
+          <div class="stat-chip gold">💜 Share Memory: <span id="mem-count">—</span></div>
+        </div>
+        <div class="controls">
+          <input type="text" class="form-input" id="search-input" placeholder="🔍 Search by name or message…"/>
+          <button class="filter-btn active" data-filter="all">All</button>
+          <button class="filter-btn" data-filter="memory">💜 Memory</button>
+          <button class="filter-btn" data-filter="normal">Regular</button>
+        </div>
+      </div>
+
+      <div class="entries-grid" id="entries-grid">
+        <div style="grid-column:1/-1;text-align:center;padding:50px;"><div class="spin-ring" style="margin:0 auto;"></div></div>
+      </div>
+    </div>
+  </div>
+
+  <script type="module" src="app.js"></script>
+</body>
+</html>

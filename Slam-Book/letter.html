@@ -1,0 +1,552 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Letter Generator 💌 – Roobi's Slam Book</title>
+  <link rel="stylesheet" href="style.css"/>
+  <style>
+  /* ===============================
+   LETTER PAGE FULL RESPONSIVE FIX
+   Keeps your existing design + fixes overlap
+   =============================== */
+
+.letter-page{
+  min-height:100vh;
+  padding-bottom:80px;
+}
+
+/* MAIN LAYOUT */
+.letter-layout{
+  display:flex;
+  flex-wrap:wrap;
+  gap:24px;
+  max-width:1200px;
+  margin:0 auto;
+  padding:32px 20px;
+  position:relative;
+  z-index:1;
+  align-items:flex-start;
+}
+
+/* LEFT + RIGHT PANELS */
+.editor-panel,
+.preview-panel{
+  flex:1 1 480px;
+  min-width:0;
+  width:100%;
+}
+
+/* Disable sticky to prevent overlap */
+.editor-panel{
+  position:static;
+  top:auto;
+}
+
+.preview-panel{
+  position:static;
+}
+
+/* ===============================
+   EDITOR
+   =============================== */
+
+.editor-header{
+  margin-bottom:24px;
+}
+
+.editor-title{
+  font-family:var(--font-display);
+  font-size:clamp(1.6rem,3vw,2.4rem);
+  font-weight:600;
+  color:var(--text-primary);
+  margin-bottom:4px;
+}
+
+.editor-sub{
+  color:var(--text-secondary);
+  font-size:0.88rem;
+}
+
+.editor-card{
+  margin-bottom:16px;
+}
+
+.editor-card .card-body{
+  padding:22px 24px;
+}
+
+/* ===============================
+   UPLOAD
+   =============================== */
+
+.upload-zone{
+  border:1.5px dashed var(--border-rose);
+  border-radius:var(--radius-sm);
+  padding:24px;
+  text-align:center;
+  cursor:pointer;
+  background:var(--rose-subtle);
+  position:relative;
+  transition:var(--transition);
+}
+
+.upload-zone:hover{
+  background:rgba(232,98,122,0.12);
+}
+
+.upload-zone input{
+  position:absolute;
+  inset:0;
+  opacity:0;
+  cursor:pointer;
+  width:100%;
+}
+
+.upload-zone-icon{
+  font-size:2rem;
+  margin-bottom:6px;
+}
+
+.upload-zone-label{
+  color:var(--text-muted);
+  font-size:0.85rem;
+}
+
+.upload-preview{
+  width:100%;
+  max-height:140px;
+  object-fit:cover;
+  border-radius:var(--radius-sm);
+  margin-top:12px;
+  display:none;
+}
+
+/* ===============================
+   THEMES
+   =============================== */
+
+.themes-grid{
+  display:flex;
+  gap:8px;
+  flex-wrap:wrap;
+}
+
+.theme-btn{
+  padding:8px 14px;
+  border-radius:var(--radius-sm);
+  border:1.5px solid var(--border);
+  background:var(--bg-elevated);
+  font-family:var(--font-body);
+  font-size:0.8rem;
+  font-weight:500;
+  cursor:pointer;
+  color:var(--text-secondary);
+  transition:var(--transition);
+  display:flex;
+  align-items:center;
+  gap:6px;
+}
+
+.theme-btn:hover{
+  border-color:var(--border-rose);
+  color:var(--text-primary);
+}
+
+.theme-btn.active{
+  border-color:var(--rose);
+  background:var(--rose-subtle);
+  color:var(--rose);
+}
+
+.theme-swatch{
+  width:14px;
+  height:14px;
+  border-radius:4px;
+  flex-shrink:0;
+}
+
+/* ===============================
+   PREVIEW HEADER
+   =============================== */
+
+.preview-header{
+  margin-bottom:22px;
+}
+
+.preview-title{
+  font-family:var(--font-display);
+  font-size:1.5rem;
+  font-weight:600;
+  color:var(--text-primary);
+  margin-bottom:4px;
+}
+
+.preview-sub{
+  color:var(--text-secondary);
+  font-size:0.87rem;
+}
+
+/* ===============================
+   LETTER PREVIEW
+   =============================== */
+
+#letter-preview{
+  width:100%;
+  max-width:100%;
+  min-height:auto;
+  padding:28px 22px;
+  border-radius:var(--radius);
+  position:relative;
+  overflow:hidden;
+  box-sizing:border-box;
+  box-shadow:0 16px 60px rgba(0,0,0,0.5);
+  transition:background 0.4s,color 0.4s;
+}
+
+/* decorations */
+.lt-corners{
+  position:absolute;
+  inset:0;
+  pointer-events:none;
+}
+
+.lt-c{
+  position:absolute;
+  font-size:1.2rem;
+  opacity:0.25;
+}
+
+.lt-c.tl{top:12px;left:14px;}
+.lt-c.tr{top:12px;right:14px;}
+.lt-c.bl{bottom:12px;left:14px;}
+.lt-c.br{bottom:12px;right:14px;}
+
+.lt-line{
+  height:1.5px;
+  margin:14px 0;
+  opacity:0.25;
+  border-radius:1px;
+}
+
+.lt-from{
+  font-size:0.72rem;
+  text-transform:uppercase;
+  letter-spacing:0.12em;
+  opacity:0.6;
+  margin-bottom:8px;
+}
+
+.lt-to{
+  font-family:var(--font-script);
+  font-size:1.45rem;
+  margin-bottom:14px;
+}
+
+.lt-img{
+  width:100%;
+  max-width:150px;
+  height:auto;
+  border-radius:12px;
+  margin:16px auto;
+  display:none;
+  box-shadow:0 6px 20px rgba(0,0,0,0.3);
+}
+
+.lt-body{
+  font-size:1rem;
+  line-height:1.8;
+  white-space:pre-wrap;
+  overflow-wrap:break-word;
+  word-break:break-word;
+}
+
+.lt-sign{
+  font-family:var(--font-script);
+  font-size:1.4rem;
+  margin-top:22px;
+  overflow-wrap:break-word;
+}
+
+.lt-stamp{
+  position:absolute;
+  bottom:14px;
+  right:14px;
+  width:38px;
+  height:38px;
+  border-radius:50%;
+  border:1.5px dashed rgba(255,255,255,0.3);
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  font-size:1rem;
+  opacity:0.4;
+  transform:rotate(-12deg);
+}
+
+/* ===============================
+   THEMES
+   =============================== */
+
+[data-theme="noir"]{
+  background:#0d0a12;
+  color:#f0e8f5;
+}
+[data-theme="noir"] .lt-line{
+  background:rgba(232,98,122,0.4);
+}
+
+[data-theme="velvet"]{
+  background:#1a0a1a;
+  color:#f5d5f0;
+}
+[data-theme="velvet"] .lt-line{
+  background:rgba(155,127,196,0.5);
+}
+
+[data-theme="ember"]{
+  background:#1a0a00;
+  color:#ffe8c0;
+}
+[data-theme="ember"] .lt-line{
+  background:rgba(212,168,83,0.4);
+}
+
+[data-theme="abyss"]{
+  background:#000d1a;
+  color:#c0e8f5;
+}
+[data-theme="abyss"] .lt-line{
+  background:rgba(78,205,196,0.35);
+}
+
+[data-theme="rose"]{
+  background:#1a0510;
+  color:#fde8ee;
+}
+[data-theme="rose"] .lt-line{
+  background:rgba(232,98,122,0.5);
+}
+
+[data-theme="forest"]{
+  background:#051a0a;
+  color:#d0f0e0;
+}
+[data-theme="forest"] .lt-line{
+  background:rgba(78,205,100,0.35);
+}
+
+/* ===============================
+   BUTTONS
+   =============================== */
+
+.action-row{
+  display:flex;
+  gap:12px;
+  margin-top:18px;
+  flex-wrap:wrap;
+}
+
+.char-counter{
+  font-size:0.77rem;
+  color:var(--text-muted);
+  text-align:right;
+  margin-top:4px;
+}
+
+/* ===============================
+   MOBILE
+   =============================== */
+
+@media (max-width:780px){
+
+  .letter-layout{
+    flex-direction:column;
+    gap:20px;
+    padding:18px 14px;
+  }
+
+  .editor-panel,
+  .preview-panel{
+    flex:1 1 100%;
+    width:100%;
+  }
+
+  #letter-preview{
+    padding:22px 16px;
+  }
+
+  .lt-to{
+    font-size:1.25rem;
+  }
+
+  .lt-sign{
+    font-size:1.2rem;
+  }
+
+  .lt-img{
+    max-width:120px;
+  }
+
+  .action-row{
+    flex-direction:column;
+  }
+
+  .action-row button{
+    width:100%;
+  }
+}
+  </style>
+</head>
+<body data-page="letter">
+  <div class="ambient"><div class="ab ab-1"></div><div class="ab ab-2"></div><div class="ab ab-3"></div></div>
+  <div id="spinner" class="hidden"><div class="spin-ring"></div></div>
+
+  <nav class="navbar">
+    <a href="index.html" class="nav-brand">Roobi's</a>
+    <div class="nav-right">
+      <a href="form.html" class="btn btn-primary btn-sm">✨ Slam Book</a>
+    </div>
+  </nav>
+
+  <div class="letter-page page">
+    <div class="letter-layout">
+
+      <!-- Editor -->
+      <div class="editor-panel">
+        <div class="editor-header">
+          <div class="eyebrow">Create</div>
+          <h1 class="editor-title">Letter Generator</h1>
+          <p class="editor-sub">Build a beautiful keepsake — download as PNG 📥</p>
+        </div>
+
+        <!-- Photo upload -->
+        <div class="card editor-card">
+          <div class="card-head">
+            <div class="card-head-icon">📸</div>
+            <div class="card-head-text"><h2>Your Photo</h2><p>Optional, shows in the letter</p></div>
+          </div>
+          <div class="card-body">
+            <div class="upload-zone" id="upload-zone">
+              <input type="file" id="letter-img-input" accept="image/*"/>
+              <div class="upload-zone-icon">🖼️</div>
+              <div class="upload-zone-label">Click or drop image here</div>
+              <img class="upload-preview" id="upload-preview" alt=""/>
+            </div>
+          </div>
+        </div>
+
+        <!-- Fields -->
+        <div class="card editor-card">
+          <div class="card-body">
+            <div class="form-group">
+              <label class="form-label">From (your name)</label>
+              <input type="text" class="form-input" id="letter-from" placeholder="Your name…" maxlength="50"/>
+            </div>
+            <div class="form-group">
+              <label class="form-label">To</label>
+              <input type="text" class="form-input" id="letter-to" placeholder="Roobis " maxlength="50" value="Roobis "/>
+            </div>
+            <div class="form-group" style="margin-bottom:6px;">
+              <label class="form-label">Your Message</label>
+              <textarea class="form-textarea" id="letter-text" rows="7" maxlength="600"
+                placeholder="Dear Roobis,&#10;&#10;There's something I've always wanted to tell you…&#10;&#10;With love ✨"></textarea>
+              <div class="char-counter"><span id="letter-char">0</span>/600</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Themes -->
+        <div class="card editor-card">
+          <div class="card-head">
+            <div class="card-head-icon">🎨</div>
+            <div class="card-head-text"><h2>Letter Style</h2><p>6 dark themes</p></div>
+          </div>
+          <div class="card-body">
+            <div class="themes-grid">
+              <button class="theme-btn active" data-theme="noir">
+                <span class="theme-swatch" style="background:#0d0a12;border:1px solid #333"></span> Noir
+              </button>
+              <button class="theme-btn" data-theme="velvet">
+                <span class="theme-swatch" style="background:#1a0a1a;border:1px solid #4a2060"></span> Velvet
+              </button>
+              <button class="theme-btn" data-theme="ember">
+                <span class="theme-swatch" style="background:#1a0a00;border:1px solid #604020"></span> Ember
+              </button>
+              <button class="theme-btn" data-theme="abyss">
+                <span class="theme-swatch" style="background:#000d1a;border:1px solid #003060"></span> Abyss
+              </button>
+              <button class="theme-btn" data-theme="rose">
+                <span class="theme-swatch" style="background:#1a0510;border:1px solid #600030"></span> Rose
+              </button>
+              <button class="theme-btn" data-theme="forest">
+                <span class="theme-swatch" style="background:#051a0a;border:1px solid #104020"></span> Forest
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Preview -->
+      <div class="preview-panel">
+        <div class="preview-header">
+          <div class="eyebrow">Preview</div>
+          <h2 class="preview-title">Your Letter</h2>
+          <p class="preview-sub">Live preview — exactly what gets downloaded</p>
+        </div>
+
+        <div id="letter-preview" data-theme="noir">
+          <div class="lt-corners">
+            <span class="lt-c tl">🌸</span>
+            <span class="lt-c tr">✨</span>
+            <span class="lt-c bl">💕</span>
+            <span class="lt-c br">🌷</span>
+          </div>
+          <div class="lt-from">A letter from <span id="preview-from">You</span></div>
+          <div class="lt-to">Dear <span id="preview-to"></span>,</div>
+          <div class="lt-line"></div>
+          <img class="lt-img" id="preview-img" src="" alt=""/>
+          <div class="lt-body" id="preview-text">Your letter will appear here as you type…</div>
+          <div class="lt-line"></div>
+          <div class="lt-sign">Cheers, <span id="preview-from-2">You</span></div>
+          <div class="lt-stamp">💌</div>
+        </div>
+
+        <div class="action-row">
+          <button class="btn btn-primary" id="btn-download">📥 Download as Image</button>
+          <button class="btn btn-ghost" onclick="navigator.clipboard.writeText(location.href).then(()=>alert('Link copied!'))">🔗 Share</button>
+        </div>
+        <p style="font-size:0.77rem;color:var(--text-muted);margin-top:10px;">
+          💡 High-res 2× export — print-quality output
+        </p>
+      </div>
+
+    </div>
+  </div>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+  <script type="module" src="app.js"></script>
+  <script>
+    // Sync from→sign
+    document.getElementById("letter-from").addEventListener("input", e => {
+      document.getElementById("preview-from").textContent  = e.target.value || "You";
+      document.getElementById("preview-from-2").textContent = e.target.value || "You";
+    });
+    // Char count
+    document.getElementById("letter-text").addEventListener("input", e => {
+      document.getElementById("letter-char").textContent = e.target.value.length;
+    });
+    // Upload preview sync
+    document.getElementById("letter-img-input").addEventListener("change", e => {
+      const file = e.target.files[0];
+      if (!file) return;
+      const r = new FileReader();
+      r.onload = ev => {
+        const up = document.getElementById("upload-preview");
+        up.src = ev.target.result; up.style.display = "block";
+      };
+      r.readAsDataURL(file);
+    });
+  </script>
+</body>
+</html>
