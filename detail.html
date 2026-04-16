@@ -1,0 +1,218 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Entry Detail 💌 – Roobi's Slam Book</title>
+  <link rel="stylesheet" href="style.css"/>
+  <style>
+    .detail-page { min-height:100vh; padding-bottom:80px; }
+
+    /* Hero */
+    .detail-hero {
+      text-align:center; padding:56px 24px 40px;
+      position:relative; z-index:1;
+    }
+    .avatar-frame {
+      position:relative; display:inline-block; margin-bottom:24px;
+    }
+    .avatar-ring {
+      position:absolute; inset:-10px; border-radius:50%;
+      border:1.5px dashed var(--border-rose);
+      animation:spin 22s linear infinite; opacity:0.7;
+    }
+    @keyframes spin { to { transform:rotate(360deg); } }
+    .detail-img {
+      width:110px; height:110px; border-radius:50%;
+      object-fit:cover;
+      border:3px solid var(--bg-elevated);
+      box-shadow:0 0 0 3px var(--border-rose), 0 0 40px var(--rose-glow);
+    }
+    .detail-name {
+      font-family:var(--font-display);
+      font-size:clamp(1.8rem,4vw,2.8rem); font-weight:600;
+      color:var(--text-primary); margin-bottom:5px;
+    }
+    .detail-roll { color:var(--text-muted); font-size:0.9rem; margin-bottom:18px; }
+    .detail-chips { display:flex; gap:10px; justify-content:center; flex-wrap:wrap; }
+    .chip {
+      padding:6px 16px; border-radius:50px; font-size:0.78rem;
+      font-weight:600; letter-spacing:0.04em; border:1px solid;
+    }
+    .chip-rose { background:var(--rose-subtle); border-color:var(--border-rose); color:var(--rose); }
+    .chip-gold { background:var(--gold-glow); border-color:rgba(212,168,83,0.35); color:var(--gold); }
+    .chip-lilac { background:rgba(155,127,196,0.1); border-color:rgba(155,127,196,0.35); color:var(--lilac); }
+    .chip-muted { background:var(--bg-elevated); border-color:var(--border); color:var(--text-muted); }
+
+    /* Memory banner */
+    .memory-banner {
+      display:none; align-items:center; justify-content:center; gap:10px;
+      background:rgba(155,127,196,0.1); border:1px solid rgba(155,127,196,0.3);
+      border-radius:var(--radius-sm); padding:14px 20px;
+      font-size:0.9rem; color:var(--lilac); font-weight:500;
+      max-width:500px; margin:0 auto 32px;
+    }
+    .memory-banner.show { display:flex; }
+
+    /* Content */
+    .detail-content { max-width:760px; margin:0 auto; padding:0 24px; position:relative; z-index:1; }
+
+    /* Answers grid */
+    .answers-grid {
+      display:grid; grid-template-columns:repeat(auto-fill, minmax(265px,1fr));
+      gap:14px; margin-bottom:24px;
+    }
+    .answer-block {
+      background:var(--bg-card); border:1px solid var(--border);
+      border-radius:var(--radius-sm); padding:20px;
+      box-shadow:var(--shadow-card); transition:var(--transition);
+    }
+    .answer-block:hover { border-color:var(--border-rose); }
+    .answer-block-label {
+      font-size:0.72rem; font-weight:700; letter-spacing:0.1em;
+      text-transform:uppercase; color:var(--text-muted); margin-bottom:8px;
+    }
+    .answer-block-val {
+      font-family:var(--font-display); font-size:1.05rem;
+      color:var(--text-primary); line-height:1.45;
+    }
+    .answer-block-val.one-word {
+      font-size:1.55rem; font-style:italic; color:var(--rose);
+      text-shadow:0 0 20px var(--rose-glow);
+    }
+    .rating-stars { color:var(--gold); font-size:1.1rem; }
+
+    /* Message bubble */
+    .msg-section { margin-bottom:24px; }
+    .msg-section-title {
+      font-family:var(--font-display); font-size:1.15rem;
+      color:var(--text-primary); margin-bottom:14px;
+      display:flex; align-items:center; gap:10px;
+    }
+    .diary-card {
+      background:var(--bg-card); border:1px solid var(--border-rose);
+      border-radius:0 var(--radius) var(--radius) var(--radius);
+      padding:28px 30px; position:relative;
+      box-shadow:var(--shadow-card), 0 0 30px var(--rose-glow);
+    }
+    .diary-card::before {
+      content:''; position:absolute; top:-1px; left:0;
+      width:40px; height:3px;
+      background:linear-gradient(to right, var(--rose), transparent);
+      border-radius:2px;
+    }
+    .diary-text {
+      font-family:var(--font-display); font-style:italic;
+      font-size:1.08rem; color:var(--text-primary);
+      line-height:1.85; white-space:pre-wrap;
+    }
+    .diary-text.empty { color:var(--text-muted); }
+
+    /* Memory glow */
+    .detail-wrap.memory-glow .diary-card {
+      border-color:rgba(155,127,196,0.5);
+      box-shadow:var(--shadow-card), 0 0 30px rgba(155,127,196,0.1);
+    }
+
+    @media(max-width:640px){ .answers-grid{ grid-template-columns:1fr; } }
+  </style>
+</head>
+<body data-page="detail">
+  <div class="ambient"><div class="ab ab-1"></div><div class="ab ab-2"></div><div class="ab ab-3"></div></div>
+  <div id="spinner" class="hidden"><div class="spin-ring"></div></div>
+
+  <nav class="navbar">
+    <a href="index.html" class="nav-brand">Roobi's</a>
+    <div class="nav-right">
+      <a href="admin.html" class="btn btn-ghost btn-sm">← Dashboard</a>
+    </div>
+  </nav>
+
+  <div class="detail-page page" id="detail-wrap">
+    <!-- Hero -->
+    <div class="detail-hero">
+      <div class="avatar-frame">
+        <div class="avatar-ring"></div>
+        <img class="detail-img" id="detail-img" src="" alt="avatar"/>
+      </div>
+      <h1 class="detail-name" id="detail-name">—</h1>
+      <p class="detail-roll">Roll No: <span id="detail-roll">—</span></p>
+      <div class="detail-chips">
+        <span class="chip chip-rose" id="detail-rating-chip">⭐ —</span>
+        <span class="chip chip-muted" id="detail-date">—</span>
+      </div>
+    </div>
+
+    <div class="detail-content">
+      <!-- Memory banner -->
+      <div class="memory-banner" id="memory-banner">
+        💜 This person wants to share memories with you
+      </div>
+
+      <div class="eyebrow" style="margin-bottom:16px;">The Slam Answers</div>
+
+      <div class="answers-grid">
+        <div class="answer-block">
+          <div class="answer-block-label">👀 First Impression</div>
+          <div class="answer-block-val" id="detail-impression">—</div>
+        </div>
+        <div class="answer-block">
+          <div class="answer-block-label">🌈 Kind of Person</div>
+          <div class="answer-block-val" id="detail-personality">—</div>
+        </div>
+        <div class="answer-block">
+          <div class="answer-block-label">🔧 Should Improve</div>
+          <div class="answer-block-val" id="detail-improve">—</div>
+        </div>
+        <div class="answer-block">
+          <div class="answer-block-label">💡 In One Word</div>
+          <div class="answer-block-val one-word" id="detail-oneword">—</div>
+        </div>
+        <div class="answer-block" style="grid-column:1/-1">
+          <div class="answer-block-label">⭐ Rating</div>
+          <div class="answer-block-val">
+            <span class="rating-stars" id="detail-rating-stars"></span>
+            <strong id="detail-rating" style="margin-left:8px;">—</strong>
+          </div>
+        </div>
+      </div>
+
+      <div class="divider"></div>
+
+      <div class="msg-section">
+        <div class="msg-section-title">💌 The Secret Message</div>
+        <div class="diary-card">
+          <div class="diary-text" id="detail-message">—</div>
+        </div>
+      </div>
+
+      <div style="text-align:center;padding-top:12px;">
+        <button class="btn btn-ghost" id="btn-back">← Back to all entries</button>
+      </div>
+    </div>
+  </div>
+
+  <script type="module" src="app.js"></script>
+  <script type="module">
+    // Enhance rating display after app.js sets the value
+    setTimeout(() => {
+      const rEl = document.getElementById("detail-rating");
+      const starsEl = document.getElementById("detail-rating-stars");
+      const chipEl  = document.getElementById("detail-rating-chip");
+      if (rEl && starsEl) {
+        const n = parseInt(rEl.textContent);
+        if (!isNaN(n)) {
+          starsEl.textContent = "★".repeat(Math.min(n,10));
+          if (chipEl) chipEl.textContent = `⭐ ${n}/10`;
+        }
+      }
+      // Mark empty message
+      const msgEl = document.getElementById("detail-message");
+      if (msgEl && (msgEl.textContent === "—" || !msgEl.textContent.trim())) {
+        msgEl.classList.add("empty");
+        msgEl.textContent = "They chose silence… 🤍";
+      }
+    }, 800);
+  </script>
+</body>
+</html>

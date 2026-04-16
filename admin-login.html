@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Admin Login 🔐 – Roobi's Slam Book</title>
+  <link rel="stylesheet" href="style.css"/>
+  <style>
+    .login-page {
+      min-height: 100vh; display: flex;
+      align-items: center; justify-content: center;
+      padding: 24px; position: relative; z-index: 1;
+    }
+    .login-wrap { max-width: 420px; width: 100%; }
+
+    .login-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-lg);
+      box-shadow: var(--shadow-card), var(--shadow-inset);
+      overflow: hidden;
+      animation: fadeUp 0.55s ease;
+    }
+    .login-top {
+      padding: 44px 40px 32px;
+      text-align: center;
+      background: linear-gradient(180deg, var(--bg-elevated) 0%, transparent 100%);
+      border-bottom: 1px solid var(--border);
+    }
+    .login-icon-wrap {
+      width: 72px; height: 72px;
+      background: var(--rose-subtle);
+      border: 1.5px solid var(--border-rose);
+      border-radius: 20px;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 2rem; margin: 0 auto 20px;
+      box-shadow: 0 0 28px var(--rose-glow);
+    }
+    .login-title {
+      font-family: var(--font-display);
+      font-size: 1.85rem; font-weight: 600;
+      color: var(--text-primary); margin-bottom: 6px;
+    }
+    .login-sub { font-size: 0.87rem; color: var(--text-muted); }
+
+    .login-body { padding: 32px 40px 40px; }
+
+    .login-hint {
+      background: rgba(212,168,83,0.06);
+      border: 1px solid rgba(212,168,83,0.2);
+      border-radius: var(--radius-sm);
+      padding: 11px 15px;
+      font-size: 0.8rem;
+      color: var(--gold);
+      margin-bottom: 22px;
+    }
+
+    .pw-wrap { position: relative; }
+    .pw-toggle {
+      position: absolute; right: 14px; top: 50%; transform: translateY(-50%);
+      background: none; border: none; color: var(--text-muted);
+      cursor: pointer; font-size: 1rem; padding: 4px;
+      transition: color 0.2s;
+    }
+    .pw-toggle:hover { color: var(--rose); }
+
+    @media(max-width:480px){
+      .login-top{ padding:36px 26px 26px; }
+      .login-body{ padding:26px 26px 36px; }
+    }
+  </style>
+</head>
+<body data-page="admin-login">
+  <div class="ambient"><div class="ab ab-1"></div><div class="ab ab-2"></div><div class="ab ab-3"></div></div>
+  <div id="spinner" class="hidden"><div class="spin-ring"></div></div>
+
+  <nav class="navbar">
+    <a href="index.html" class="nav-brand">Roobi's</a>
+    <div class="nav-right">
+      <a href="index.html" class="btn btn-ghost btn-sm">← Home</a>
+    </div>
+  </nav>
+
+  <div class="login-page page">
+    <div class="login-wrap">
+      <div class="login-card">
+        <div class="login-top">
+          <div class="login-icon-wrap">🔐</div>
+          <h1 class="login-title">Admin Access</h1>
+          <p class="login-sub">Only Roobi gets past this door 💅</p>
+        </div>
+        <div class="login-body">
+          <div class="login-hint">
+            🔑 Sign in with the admin email &amp; password
+          </div>
+          <form id="login-form" novalidate>
+            <div class="form-group">
+              <label class="form-label">Email Address</label>
+              <input type="email" class="form-input" id="email"
+                placeholder="admin@email.com" autocomplete="email"/>
+            </div>
+            <div class="form-group" style="margin-bottom:24px;">
+              <label class="form-label">Password</label>
+              <div class="pw-wrap">
+                <input type="password" class="form-input" id="password"
+                  placeholder="••••••••" autocomplete="current-password"/>
+                <button type="button" class="pw-toggle" id="pw-toggle" title="Show/hide">👁</button>
+              </div>
+            </div>
+            <button type="submit" class="btn btn-primary" style="width:100%;justify-content:center;padding:15px;">
+              🔓 Enter Dashboard
+            </button>
+          </form>
+        </div>
+      </div>
+
+      <p style="text-align:center;margin-top:20px;font-size:0.8rem;color:var(--text-ghost);">
+        Not an admin? <a href="form.html" style="color:var(--rose);text-decoration:none;">Fill the Slam Book →</a>
+      </p>
+    </div>
+  </div>
+
+  <script type="module" src="app.js"></script>
+  <script>
+    document.getElementById("pw-toggle")?.addEventListener("click", () => {
+      const inp = document.getElementById("password");
+      inp.type = inp.type === "password" ? "text" : "password";
+    });
+  </script>
+</body>
+</html>
