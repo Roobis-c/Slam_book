@@ -276,7 +276,7 @@ function initLetter() {
   const sync = () => {
     if (previewTxt)  previewTxt.textContent  = textInput?.value  || "Your message will appear here…";
     if (previewFrom) previewFrom.textContent = fromInput?.value  || "Your Name";
-    if (previewTo)   previewTo.textContent   = toInput?.value    || "Roobi";
+    if (previewTo)   previewTo.textContent   = toInput?.value    || "Roobis";
   };
   [textInput, fromInput, toInput].forEach(el => el?.addEventListener("input", sync));
 
