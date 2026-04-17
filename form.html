@@ -420,7 +420,7 @@
           <div class="q-row"><label class="form-label">What do you think I’ll be doing in the future?</label><input type="text" class="form-input" id="personality" placeholder="Go Ahead" maxlength="220"/></div>
           <div class="q-row"><label class="form-label">One thing I should improve?</label><input type="text" class="form-input" id="improve" placeholder="Be real, I can take it 💪" maxlength="220"/></div>
           <div class="q-row"><label class="form-label">Describe me in one word</label><input type="text" class="form-input" id="oneWord" placeholder="Just one ✨" maxlength="40"/></div>
-          <div class="q-row"><label class="form-label">If I had a warning label, what would it say?</label><input type="text" class="form-input" id="oneWord" placeholder="Tell 😤" maxlength="40"/></div>
+          <div class="q-row"><label class="form-label">If I had a warning label, what would it say?</label><input type="text" class="form-input" id="warning" placeholder="Tell 😤" maxlength="40"/></div>
           
           <!-- STAR RATING (product review style) -->
           <div class="q-row">
@@ -639,6 +639,7 @@
               personality: document.getElementById("personality")?.value.trim() || "",
               improve: document.getElementById("improve")?.value.trim() || "",
               oneWord: document.getElementById("oneWord")?.value.trim() || "",
+              warning: document.getElementById("warning")?.value.trim() || ""
               rating: ratingVal
             },
             message: document.getElementById("message")?.value.trim() || "",
