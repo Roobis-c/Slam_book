@@ -219,6 +219,7 @@ function initDetail() {
     set("detail-personality", d.answers?.personality);
     set("detail-improve",     d.answers?.improve);
     set("detail-oneword",     d.answers?.oneWord);
+    set("detail-warning", d.answers?.warning);
     set("detail-rating",      `${d.answers?.rating||"?"} / 10`);
     set("detail-message",     d.message);
 
